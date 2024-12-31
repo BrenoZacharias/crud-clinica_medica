@@ -35,15 +35,16 @@ public class TelaPaciente {
 		Button btnAdicionar = new Button("Adicionar");
 		Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button("Pesquisar");
-		
-		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar);
+		Button btnLimpar = new Button("Limpar");
+
+		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar, btnLimpar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
 		
 		Label lblNome = new Label("Nome:");
 		Label lblCpf = new Label("CPF:");
-		Label lblRua = new Label("Rua:");
+		Label lblLogradouro = new Label("Logradouro:");
 		Label lblNum = new Label("Num:");
 		Label lblCidade = new Label("Cidade:");
 		Label lblComp = new Label("Complemento:");
@@ -52,7 +53,7 @@ public class TelaPaciente {
 		Label lblNasc = new Label (" Data de nascimento: ");
 		TextField txtNome = new TextField();
 		TextField txtCpf = new TextField();
-		TextField txtRua = new TextField();
+		TextField txtLogradouro = new TextField();
 		TextField txtNum = new TextField();
 		TextField txtCidade = new TextField();
 		TextField txtComp = new TextField();
@@ -65,7 +66,7 @@ public class TelaPaciente {
 		Bindings.bindBidirectional(txtSexo.textProperty(), control.sexo);
 		Bindings.bindBidirectional(txtTel.textProperty(), control.telefone);
 		Bindings.bindBidirectional(txtNasc.textProperty(), control.nascimento, new LocalDateStringConverter());
-		Bindings.bindBidirectional(txtRua.textProperty(), control.rua);
+		Bindings.bindBidirectional(txtLogradouro.textProperty(), control.logradouro);
 		Bindings.bindBidirectional(txtNum.textProperty(), control.num);
 		Bindings.bindBidirectional(txtCidade.textProperty(), control.cidade);
 		Bindings.bindBidirectional(txtComp.textProperty(), control.complemento);
@@ -84,8 +85,8 @@ public class TelaPaciente {
 		painel.add(txtSexo, 3, 0);
 		painel.add(lblNasc, 2, 1);
 		painel.add(txtNasc, 3, 1);
-		painel.add(lblRua, 2, 2);
-		painel.add(txtRua, 3, 2);
+		painel.add(lblLogradouro, 2, 2);
+		painel.add(txtLogradouro, 3, 2);
 		painel.add(lblNum, 4, 0);
 		painel.add(txtNum, 5, 0);
 		painel.add(lblCidade, 4, 1);
@@ -125,9 +126,9 @@ public class TelaPaciente {
 						return new ReadOnlyStringWrapper(d.format(fmt));
 			}
 		);
-		TableColumn<Paciente, String> col6 = new TableColumn<>("Rua");
+		TableColumn<Paciente, String> col6 = new TableColumn<>("Logradouro");
 		col6.setCellValueFactory(
-			new PropertyValueFactory<Paciente, String>("rua")
+			new PropertyValueFactory<Paciente, String>("logradouro")
 		);
 		TableColumn<Paciente, String> col7 = new TableColumn<>("Num");
 		col7.setCellValueFactory(
@@ -141,7 +142,7 @@ public class TelaPaciente {
 		col9.setCellValueFactory(
 			new PropertyValueFactory<Paciente, String>("complemento")
 		);
-		TableColumn<Paciente, String> col10 = new TableColumn<>("Ações");
+		TableColumn<Paciente, String> col10 = new TableColumn<>("AÃ§Ãµes");
 	        col10.setCellFactory( (tbcol) -> {
 	            Button btnRemover = new Button("Remover");
 	            TableCell<Paciente, String> tcell = new TableCell<Paciente, String>() {
@@ -169,6 +170,7 @@ public class TelaPaciente {
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
 			control.fromEntity((Paciente) novo);
 		});
+		control.pesquisar();
 		btnAdicionar.setOnAction( (e) -> {
 			control.adicionar();
 		});
@@ -178,7 +180,10 @@ public class TelaPaciente {
 		btnPesquisar.setOnAction( (e) -> {
 			control.pesquisar();
 		});
-		
+		btnLimpar.setOnAction( (e) -> {
+			control.limpar();
+		});
+
 		VBox vb = new VBox(painel, hb, table);
 		 
 		return vb;

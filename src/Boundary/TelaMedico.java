@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import Controller.TelaMedicoController;
 import Entities.Especialidade;
 import Entities.Medico;
+import EntityView.MedicoEntityView;
 import javafx.beans.binding.Bindings;
 //import Entities.Medico;
 import javafx.beans.property.StringProperty;
@@ -30,29 +31,29 @@ public class TelaMedico {
 		Button btnAdicionar = new Button("Adicionar");
 		Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button(" Pesquisar ");
+		Button btnLimpar = new Button(" Limpar ");
 		
-		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar);
+		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar, btnLimpar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
 		
-		//------------------------------------------- área de Edição Label/TextField
+		//------------------------------------------- ï¿½rea de Ediï¿½ï¿½o Label/TextField
 		GridPane painel = new GridPane();
 		
 		Label lblNome = new Label("Nome:");
-		Label lblEspec = new Label("Especialização:");
+		Label lblEspec = new Label("EspecializaÃ§Ã£o:");
 		Label lblTelefone = new Label ("Telefone:");
 		Label lblCrm = new Label("CRM:");
-		Label lblRua = new Label("Rua");
+		Label lblLogradouro = new Label("Logradouro:");
 		Label lblNum = new Label("Num:");
 		Label lblCidade = new Label("Cidade:");
 		Label lblComp = new Label("Complemento:");
 		Label lblNasc = new Label ("Data de nascimento:");
 		TextField txtNome = new TextField();
-		TextField txtEspec = new TextField();
 		TextField txtTel = new TextField();
 		TextField txtCrm = new TextField();
-		TextField txtRua = new TextField();
+		TextField txtLogradouro = new TextField();
 		TextField txtNum = new TextField();
 		TextField txtCidade = new TextField();
 		TextField txtComp = new TextField();
@@ -61,7 +62,7 @@ public class TelaMedico {
 		ComboBox<String> cbxNomeEspecialidade;
 		cbxNomeEspecialidade = new ComboBox<>();
 		cbxNomeEspecialidade.setItems(control.getObservableListOfNomeEspecialidades());
-		cbxNomeEspecialidade.setPromptText("Especialização");
+		cbxNomeEspecialidade.setPromptText("EspecializaÃ§Ã£o");
 		
 		painel.setAlignment(Pos.TOP_LEFT);
 		
@@ -76,8 +77,8 @@ public class TelaMedico {
 		painel.add(txtCrm, 3, 0);
 		painel.add(lblNasc, 2, 1);
 		painel.add(txtNasc, 3, 1);
-		painel.add(lblRua, 2, 2);
-		painel.add(txtRua, 3, 2);
+		painel.add(lblLogradouro, 2, 2);
+		painel.add(txtLogradouro, 3, 2);
 		painel.add(lblNum, 4, 0);
 		painel.add(txtNum, 5, 0);
 		painel.add(lblCidade, 4, 1);
@@ -89,12 +90,11 @@ public class TelaMedico {
 		Bindings.bindBidirectional(txtCrm.textProperty(), control.crm);
 		Bindings.bindBidirectional(txtTel.textProperty(), control.telefone);
 		Bindings.bindBidirectional(txtNasc.textProperty(), control.nascimento, new LocalDateStringConverter());
-		Bindings.bindBidirectional(txtRua.textProperty(), control.rua);
+		Bindings.bindBidirectional(txtLogradouro.textProperty(), control.logradouro);
 		Bindings.bindBidirectional(txtNum.textProperty(), control.num);
 		Bindings.bindBidirectional(txtCidade.textProperty(), control.cidade);
 		Bindings.bindBidirectional(txtComp.textProperty(), control.complemento);
-		//Bindings.bindBidirectional(cbxNomeEspecialidade.getValue(), (StringProperty) control.nome_Especialidade);
-
+		Bindings.bindBidirectional(cbxNomeEspecialidade.valueProperty(), control.especialidade);
 		painel.setVgap(10);
 		painel.setHgap(10);
 		
@@ -102,50 +102,50 @@ public class TelaMedico {
 		
 		//-------------------------------------------------------- Table
 		
-		TableView <Medico> table = new TableView<>();
+		TableView <MedicoEntityView> table = new TableView<>();
 
-		TableColumn<Medico, String> col1 = new TableColumn<>("Nome");
+		TableColumn<MedicoEntityView, String> col1 = new TableColumn<>("Nome");
 		col1.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("nome")
+			new PropertyValueFactory<MedicoEntityView, String>("nome")
 		);
-		TableColumn<Medico, String> col2 = new TableColumn<>("Especialidade");
+		TableColumn<MedicoEntityView, String> col2 = new TableColumn<>("especialidade");
 		col2.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("getCboEspecialidade()")
+			new PropertyValueFactory<MedicoEntityView, String>("NomeEspecialidade")
 		);
-		TableColumn<Medico, String> col3 = new TableColumn<>("CRM");
+		TableColumn<MedicoEntityView, String> col3 = new TableColumn<>("CRM");
 		col3.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("crm")
+			new PropertyValueFactory<MedicoEntityView, String>("crm")
 		);
-		TableColumn<Medico, String> col4 = new TableColumn<>("Telefone");
+		TableColumn<MedicoEntityView, String> col4 = new TableColumn<>("Telefone");
 		col4.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("telefone")
+			new PropertyValueFactory<MedicoEntityView, String>("telefone")
 		);	
 		
-		TableColumn<Medico, LocalDate> col5= new TableColumn<>("Nascimento");
+		TableColumn<MedicoEntityView, LocalDate> col5= new TableColumn<>("Nascimento");
 		col5.setCellValueFactory(
-			new PropertyValueFactory<Medico, LocalDate>("nascimento")
+			new PropertyValueFactory<MedicoEntityView, LocalDate>("nascimento")
 		);	
-		TableColumn<Medico, String> col6 = new TableColumn<>("Rua");
+		TableColumn<MedicoEntityView, String> col6 = new TableColumn<>("Logradouro");
 		col6.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("rua")
+			new PropertyValueFactory<MedicoEntityView, String>("logradouro")
 		);
-		TableColumn<Medico, String> col7 = new TableColumn<>("Num");
+		TableColumn<MedicoEntityView, String> col7 = new TableColumn<>("Num");
 		col7.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("num")
+			new PropertyValueFactory<MedicoEntityView, String>("num")
 		);
-		TableColumn<Medico, String> col8 = new TableColumn<>("Cidade");
+		TableColumn<MedicoEntityView, String> col8 = new TableColumn<>("Cidade");
 		col8.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("cidade")
+			new PropertyValueFactory<MedicoEntityView, String>("cidade")
 		);
-		TableColumn<Medico, String> col9= new TableColumn<>("Complemento");
+		TableColumn<MedicoEntityView, String> col9= new TableColumn<>("Complemento");
 		col9.setCellValueFactory(
-			new PropertyValueFactory<Medico, String>("complemento")
+			new PropertyValueFactory<MedicoEntityView, String>("complemento")
 		);
 		
-		 TableColumn<Medico, String> col10 = new TableColumn<>("Ações");
+		 TableColumn<MedicoEntityView, String> col10 = new TableColumn<>("AÃ§Ãµes");
 	        col10.setCellFactory( (tbcol) -> {
 	            Button btnRemover = new Button("Remover");
-	            TableCell<Medico, String> tcell = new TableCell<Medico, String>() {
+	            TableCell<MedicoEntityView, String> tcell = new TableCell<MedicoEntityView, String>() {
 	                @Override
 	                protected void updateItem(String item, boolean empty) {
 	                    if (empty) {
@@ -153,7 +153,7 @@ public class TelaMedico {
 	                        setText(null);
 	                    } else {
 	                        btnRemover.setOnAction( (e) -> {
-	                            Medico medico = getTableView().getItems().get(getIndex());
+	                            MedicoEntityView medico = getTableView().getItems().get(getIndex());
 	                            control.excluir(medico.getCrm());
 	                        });
 	                        setGraphic(btnRemover);
@@ -168,11 +168,11 @@ public class TelaMedico {
 		table.getColumns().addAll(col1,col2,col3,col4,col5, col6, col7, col8, col9, col10);
 		table.setItems(control.getLista());
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
-			control.fromEntity((Medico) novo);
+			control.fromEntity(control.medicoEntityViewToMedico(novo));
 		});
-
+		control.pesquisar();
 		btnAdicionar.setOnAction( (e) -> {
-			control.adicionar(cbxNomeEspecialidade.getValue());
+			control.adicionar();
 		});
 		
 		btnEditar.setOnAction( (e) -> {
@@ -182,7 +182,10 @@ public class TelaMedico {
 		btnPesquisar.setOnAction( (e) -> {
 			control.pesquisar();
 		});
-				
+
+		btnLimpar.setOnAction( (e) -> {
+			control.limpar();
+		});
 		VBox painelP = new VBox(painel, hb, table);
 		
 		return painelP;

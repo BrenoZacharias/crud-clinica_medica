@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 public class GenericDAO {
 
     private Connection c;
-    private static final String URLDB = "jdbc:mariadb://127.0.0.1:3306/dbClinicaMedica";
+    private static final String URLDB = "jdbc:mariadb://localhost:3307/dbClinicaMedica";
 	private static final String USUARIO = "root";
-	private static final String PASSWORD = "123456";
+	private static final String PASSWORD = "m0r20Q5)";
 	
     public Connection getConnection(){
 	        try {

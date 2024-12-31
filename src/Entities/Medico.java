@@ -7,7 +7,7 @@ public class Medico {
 	private String cbo_especialidade;
 	private String telefone;
 	private String crm;
-	private String rua;
+	private String logradouro;
 	private String num;
 	private String cidade;
 	private String complemento;
@@ -31,11 +31,11 @@ public class Medico {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	public String getRua() {
-		return rua;
+	public String getLogradouro() {
+		return logradouro;
 	}
-	public void setRua(String rua) {
-		this.rua = rua;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 	public String getNum() {
 		return num;

@@ -19,7 +19,6 @@ import javafx.collections.ObservableList;
 public class TelaConsultaController{
 	
 	public LongProperty id = new SimpleLongProperty(0);
-	public StringProperty cbo = new SimpleStringProperty("");
 	public StringProperty cpf = new SimpleStringProperty("");
 	public StringProperty crm = new SimpleStringProperty("");
 	public StringProperty descricao = new SimpleStringProperty("");
@@ -31,6 +30,13 @@ public class TelaConsultaController{
 	private ConsultaDAO consultaDAO;
 	{
 		consultaDAO = new ConsultaDAOImpl();
+	}
+	public void limpar() {
+		id.set(0);
+		cpf.set("");
+		crm.set("");
+		descricao.set("");
+		dataConsult.set(LocalDate.now());
 	}
 	public void adicionar() {
 		Consulta consulta = toEntity();

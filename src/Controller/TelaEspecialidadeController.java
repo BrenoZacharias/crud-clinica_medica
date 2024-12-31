@@ -17,21 +17,25 @@ public class TelaEspecialidadeController {
 	public StringProperty nome = new SimpleStringProperty("");
 	public StringProperty cbo = new SimpleStringProperty("");
 	
-private ObservableList<Especialidade> especialidades = FXCollections.observableArrayList();
+	private ObservableList<Especialidade> especialidades = FXCollections.observableArrayList();
 	
 	private EspecialidadeDAO especialidadeDAO;
 	{
 		especialidadeDAO = new EspecialidadeDAOImpl();
+		pesquisar();
 	}
 	public void adicionar() {
+		especialidades.clear();
 		Especialidade especialidade = toEntity(); 
 		especialidadeDAO.adicionar(especialidade);
-		especialidadeDAO.pesquisarTodos();
+		especialidades.addAll(especialidadeDAO.pesquisarTodos());
 	}
 	public void atualizar() {
+		especialidades.clear();
 		Especialidade especialidade = toEntity();
 		especialidadeDAO.atualizar(especialidade);
 		especialidadeDAO.pesquisarTodos();
+		especialidades.addAll(especialidadeDAO.pesquisarTodos());
 	}
 	public void excluir(String cbo) {
 		especialidadeDAO.excluir(cbo);
@@ -44,6 +48,10 @@ private ObservableList<Especialidade> especialidades = FXCollections.observableA
 		if(!especialidades.isEmpty()) {
 			fromEntity(especialidades.get(0));
 		}
+	}
+	public void limpar() {
+		nome.set("");
+		cbo.set("");
 	}
 	public Especialidade toEntity() {
 		Especialidade especialidade = new Especialidade();

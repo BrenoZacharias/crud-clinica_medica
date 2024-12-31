@@ -20,14 +20,14 @@ public class PacienteDAOImpl implements PacienteDAO {
 	public void adicionar(Paciente paciente) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "INSERT INTO paciente(nome, cpf, sexo, nascimento,telefone, rua, num, cidade, complemento)" + "VALUES(?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO paciente(nome, cpf, sexo, nascimento,telefone, logradouro, num, cidade, complemento)" + "VALUES(?,?,?,?,?,?,?,?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, paciente.getNome());
 			st.setString(2, paciente.getCpf());
 			st.setString(3, paciente.getSexo());
 			st.setDate(4, java.sql.Date.valueOf(paciente.getNascm()));
  			st.setString(5, paciente.getTelefone());
-			st.setString(6, paciente.getRua());
+			st.setString(6, paciente.getLogradouro());
 			st.setString(7, paciente.getNum());
 			st.setString(8, paciente.getCidade());
 			st.setString(9, paciente.getComplemento());
@@ -41,12 +41,12 @@ public class PacienteDAOImpl implements PacienteDAO {
 	public void atualizar(String cpf, Paciente paciente) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "UPDATE paciente SET nome = ?, sexo = ?, telefone = ?, rua = ?, num = ?, cidade = ?, complemento = ?, nascimento = ? WHERE cpf like ?";
+			String sql = "UPDATE paciente SET nome = ?, sexo = ?, telefone = ?, logradouro = ?, num = ?, cidade = ?, complemento = ?, nascimento = ? WHERE cpf like ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, paciente.getNome());
 			st.setString(2, paciente.getSexo()); 
  			st.setString(3, paciente.getTelefone());
-			st.setString(4, paciente.getRua());
+			st.setString(4, paciente.getLogradouro());
 			st.setString(5, paciente.getNum());
 			st.setString(6, paciente.getCidade());
 			st.setString(7, paciente.getComplemento());
@@ -88,7 +88,7 @@ public class PacienteDAOImpl implements PacienteDAO {
                 paciente.setCpf(rs.getString("cpf"));
                 paciente.setSexo(rs.getString("sexo"));
                 paciente.setTelefone(rs.getString("telefone"));
-                paciente.setRua(rs.getString("rua"));
+                paciente.setLogradouro(rs.getString("logradouro"));
                 paciente.setNum(rs.getString("num"));
                 paciente.setCidade(rs.getString("cidade"));
                 paciente.setComplemento(rs.getString("complemento"));

@@ -10,6 +10,7 @@ import DAOImpl.EspecialidadeDAOImpl;
 import DAOImpl.MedicoDAOImpl;
 import Entities.Especialidade;
 import Entities.Medico;
+import EntityView.MedicoEntityView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -21,13 +22,14 @@ public class TelaMedicoController {
 	public StringProperty nome = new SimpleStringProperty("");
 	public StringProperty telefone = new SimpleStringProperty("");
 	public StringProperty crm = new SimpleStringProperty("");
-	public StringProperty rua = new SimpleStringProperty("");
+	public StringProperty logradouro = new SimpleStringProperty("");
 	public StringProperty num = new SimpleStringProperty("");
 	public StringProperty cidade = new SimpleStringProperty("");
 	public StringProperty complemento = new SimpleStringProperty("");
 	public SimpleObjectProperty nascimento = new SimpleObjectProperty(LocalDate.now());
+	public StringProperty especialidade = new SimpleStringProperty("");
 	
-	private ObservableList<Medico> medicos = FXCollections.observableArrayList();
+	private ObservableList<MedicoEntityView> medicos = FXCollections.observableArrayList();
 	
 	private MedicoDAO medicoDAO;
 	{
@@ -39,16 +41,38 @@ public class TelaMedicoController {
 		especialidadeDAO = new EspecialidadeDAOImpl();
 	}
 
+	public void limpar() {
+		nome.set("");
+		telefone.set("");
+		crm.set("");
+		logradouro.set("");
+		num.set("");
+		cidade.set("");
+		complemento.set("");
+		nascimento.set(LocalDate.now());
+		especialidade.set("");
+	}
+
 	public void adicionar(String valorComboboxNomeEspecialidade) {
 		Medico medico = toEntity(valorComboboxNomeEspecialidade);
 		medicoDAO.adicionar(medico);
 		//medicos.addAll(medicoDAO.pesquisarTodos());
 		System.out.println("valor cbo: " + medico.getCboEspecialidade());
 		medico = medicoDAO.pesquisarUm(medico.getCrm());
-		medico.setCboEspecialidade("1");
-		medicos.add(medico);
+		MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
+		medicos.add(medicoEntityView);
 	}
-	
+
+	public void adicionar() {
+		Medico medico = toEntity();
+		medicoDAO.adicionar(medico);
+		//medicos.addAll(medicoDAO.pesquisarTodos());
+		System.out.println("valor cbo: " + medico.getCboEspecialidade());
+		medico = medicoDAO.pesquisarUm(medico.getCrm());
+		MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
+		medicos.add(medicoEntityView);
+	}
+
 	public void atualizar(String valorComboboxNomeEspecialidade) {
 		Medico  medico = toEntity(valorComboboxNomeEspecialidade);
 		if(medico.getCrm() == "") {
@@ -61,10 +85,11 @@ public class TelaMedicoController {
 	}
 	public void pesquisar() {
 		medicos.clear();
-		List<Medico> encontrados = medicoDAO.pesquisarTodos();
-		medicos.addAll(encontrados);
+		ArrayList<Medico> medicosEncontrados = (ArrayList<Medico>) medicoDAO.pesquisarTodos();
+		ArrayList<MedicoEntityView> medicosEntityView = medicosToMedicosEntityView(medicosEncontrados);
+		medicos.addAll(medicosEntityView);
 		if(!medicos.isEmpty()) {
-			fromEntity(medicos.get(0));
+			fromEntity(medicoDAO.pesquisarUm(medicos.get(0).getCrm()));
 		}
 
 	}
@@ -82,7 +107,7 @@ public class TelaMedicoController {
 	public void excluir(String crm) {
 		medicos.clear();
 		medicoDAO.excluir(crm);
-		medicos.addAll(medicoDAO.pesquisarTodos());
+		medicos.addAll(medicosToMedicosEntityView((ArrayList<Medico>) medicoDAO.pesquisarTodos()));
 	}
 	
 	public Medico toEntity(String valorComboboxNomeEspecialidade) {
@@ -91,13 +116,27 @@ public class TelaMedicoController {
 		m.setNome(nome.get());
 		m.setTelefone(telefone.get());
 		m.setCrm(crm.get());
-		m.setRua(rua.get());
+		m.setLogradouro(logradouro.get());
 		m.setNum(num.get());
 		m.setCidade(cidade.get());
 		m.setComplemento(complemento.get());
 		m.setNascimento((LocalDate) nascimento.get());
 		m.setCboEspecialidade(especialidadeDAO.findEspecialidadeByNome(valorComboboxNomeEspecialidade).getCbo());
+		return m;
+	}
 
+	public Medico toEntity() {
+		Medico m = new Medico();
+
+		m.setNome(nome.get());
+		m.setTelefone(telefone.get());
+		m.setCrm(crm.get());
+		m.setLogradouro(logradouro.get());
+		m.setNum(num.get());
+		m.setCidade(cidade.get());
+		m.setComplemento(complemento.get());
+		m.setNascimento((LocalDate) nascimento.get());
+		m.setCboEspecialidade(especialidadeDAO.findEspecialidadeByNome(especialidade.getValue()).getCbo());
 		return m;
 	}
 	
@@ -105,15 +144,15 @@ public class TelaMedicoController {
 		nome.set(medico.getNome());
 		telefone.set(medico.getTelefone());
 		crm.set(medico.getCrm());
-		rua.set(medico.getRua());
+		logradouro.set(medico.getLogradouro());
 		num.set(medico.getNum());
 		cidade.set(medico.getCidade());
 		complemento.set(medico.getComplemento());
 		nascimento.set(medico.getNascimento());
-		//nome_Especialidade.set(especialidadeDAO.findEspecialidadeByCbo(medico.getCboEspecialidade()).getNome());
+		especialidade.set(especialidadeDAO.findEspecialidadeByCbo(medico.getCboEspecialidade()).getNome());
 	}
 	
-	public ObservableList<Medico> getLista(){
+	public ObservableList<MedicoEntityView> getLista(){
 		return medicos;
 	}
 
@@ -121,5 +160,43 @@ public class TelaMedicoController {
 			List<String> nomeEspecialidades = new ArrayList<>();
 			especialidadeDAO.pesquisarTodos().forEach(e -> nomeEspecialidades.add(e.getNome()));
 			return FXCollections.observableList(nomeEspecialidades);
+	}
+
+	private MedicoEntityView medicoToMedicoEntityView (Medico medico) {
+		MedicoEntityView medicoEntityView =  new MedicoEntityView();
+		medicoEntityView.setNome(medico.getNome());
+		medicoEntityView.setCrm(medico.getCrm());
+		medicoEntityView.setNomeEspecialidade(especialidadeDAO.findEspecialidadeByCbo(medico.getCboEspecialidade()).getNome());
+		medicoEntityView.setCidade(medico.getCidade());
+		medicoEntityView.setComplemento(medico.getComplemento());
+		medicoEntityView.setNascimento(medico.getNascimento());
+		medicoEntityView.setTelefone(medico.getTelefone());
+		medicoEntityView.setNum(medico.getNum());
+		medicoEntityView.setLogradouro(medico.getLogradouro());
+		return medicoEntityView;
+	}
+
+	private ArrayList<MedicoEntityView> medicosToMedicosEntityView (ArrayList<Medico> medicos) {
+		ArrayList<MedicoEntityView> medicosEntityView =  new ArrayList<MedicoEntityView>();
+		for (Medico medico :
+			 medicos) {
+			MedicoEntityView medicoEntityView =  medicoToMedicoEntityView(medico);
+			medicosEntityView.add(medicoEntityView);
+		}
+		return medicosEntityView;
+	}
+
+	public Medico medicoEntityViewToMedico (MedicoEntityView medicoEntityView) {
+		Medico medico =  new Medico();
+		medico.setNome(medicoEntityView.getNome());
+		medico.setCrm(medicoEntityView.getCrm());
+		medico.setCboEspecialidade(especialidadeDAO.findEspecialidadeByNome(medicoEntityView.getNomeEspecialidade()).getCbo());
+		medico.setCidade(medicoEntityView.getCidade());
+		medico.setComplemento(medicoEntityView.getComplemento());
+		medico.setNascimento(medicoEntityView.getNascimento());
+		medico.setTelefone(medicoEntityView.getTelefone());
+		medico.setNum(medicoEntityView.getNum());
+		medico.setLogradouro(medicoEntityView.getLogradouro());
+		return medico;
 	}
 }

@@ -8,7 +8,7 @@ public class Paciente {
 	private String sexo;
 	private LocalDate nascm;
 	private String telefone;
-	private String rua;
+	private String logradouro;
 	private String num;
 	private String cidade;
 	private String complemento;
@@ -43,11 +43,11 @@ public class Paciente {
 	public void setNascm(LocalDate nascm) {
 		this.nascm = nascm;
 	}
-	public String getRua() {
-		return rua;
+	public String getLogradouro() {
+		return logradouro;
 	}
-	public void setRua(String rua) {
-		this.rua = rua;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 	public String getNum() {
 		return num;

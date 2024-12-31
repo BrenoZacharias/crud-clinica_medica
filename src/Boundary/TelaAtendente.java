@@ -96,8 +96,9 @@ public class TelaAtendente {
     	
     	Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button(" Pesquisar ");
+		Button btnLimpar = new Button(" Limpar ");
 
-		hb.getChildren().addAll(btnEditar, btnPesquisar);
+		hb.getChildren().addAll(btnEditar, btnPesquisar, btnLimpar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
@@ -188,6 +189,9 @@ public class TelaAtendente {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+		});
+		btnLimpar.setOnAction( (e) -> {
+			control.limpar();
 		});
 		VBox vb = new VBox(painel, hb, table);
 		

@@ -20,14 +20,14 @@ public class MedicoDAOImpl implements MedicoDAO{
 	public void adicionar(Medico medico) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "INSERT INTO medico(nome, especialidade, telefone, crm, rua, num, cidade, complemento, nascimento)" + "VALUES(?, ?, ?, ?, ?, ?, ?,?,?)";
+			String sql = "INSERT INTO medico(nome, especialidade, telefone, crm, logradouro, num, cidade, complemento, nascimento)" + "VALUES(?, ?, ?, ?, ?, ?, ?,?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
 			System.out.println(medico.getNome());
 			st.setString(1, medico.getNome());
 			st.setString(2, medico.getCboEspecialidade());
  			st.setString(3, medico.getTelefone());
 			st.setString(4, medico.getCrm());
-			st.setString(5, medico.getRua());
+			st.setString(5, medico.getLogradouro());
 			st.setString(6, medico.getNum());
 			st.setString(7, medico.getCidade());
 			st.setString(8, medico.getComplemento());
@@ -43,12 +43,12 @@ public class MedicoDAOImpl implements MedicoDAO{
 	public void atualizar(String crm, Medico medico) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "UPDATE medico SET nome = ?, especialidade = ?, telefone = ?, rua = ?, num = ?, cidade = ?, complemento = ?, nascimento = ? WHERE crm = ?";
+			String sql = "UPDATE medico SET nome = ?, especialidade = ?, telefone = ?, logradouro = ?, num = ?, cidade = ?, complemento = ?, nascimento = ? WHERE crm = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, medico.getNome());
 			st.setString(2, medico.getCboEspecialidade());
  			st.setString(3, medico.getTelefone());
-			st.setString(4, medico.getRua());
+			st.setString(4, medico.getLogradouro());
 			st.setString(5, medico.getNum());
 			st.setString(6, medico.getCidade());
 			st.setString(7, medico.getComplemento());
@@ -91,7 +91,7 @@ public class MedicoDAOImpl implements MedicoDAO{
                 medico.setCrm(rs.getString("crm"));
                 medico.setCboEspecialidade(rs.getString("especialidade"));
                 medico.setTelefone(rs.getString("telefone"));
-                medico.setRua(rs.getString("rua"));
+                medico.setLogradouro(rs.getString("logradouro"));
                 medico.setNum(rs.getString("num"));
                 medico.setCidade(rs.getString("cidade"));
                 medico.setComplemento(rs.getString("complemento"));
@@ -121,7 +121,7 @@ public class MedicoDAOImpl implements MedicoDAO{
 			medico.setNome(rs.getString("nome"));
 			medico.setCboEspecialidade(rs.getString("especialidade"));
 			medico.setTelefone(rs.getString("telefone"));
-			medico.setRua(rs.getString("rua"));
+			medico.setLogradouro(rs.getString("logradouro"));
 			medico.setNum(rs.getString("num"));
 			medico.setCidade(rs.getString("cidade"));
 			medico.setComplemento(rs.getString("complemento"));

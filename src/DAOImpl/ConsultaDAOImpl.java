@@ -21,7 +21,7 @@ public class ConsultaDAOImpl implements ConsultaDAO{
 	public void adicionar(Consulta consulta) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "INSERT INTO consulta(id, descricao, cpf, crm, dataConsulta)" + "VALUES(null,?, ?, ?,?)";
+			String sql = "INSERT INTO consulta(registro, descricao, cpf, crm, dataConsulta)" + "VALUES(null,?, ?, ?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, consulta.getDescricao());
 			st.setString(2, consulta.getCpf());
@@ -37,7 +37,7 @@ public class ConsultaDAOImpl implements ConsultaDAO{
 	public void atualizar(Consulta consulta) {
 		try {
 			Connection con = gDao.getConnection();
-			String sql = "UPDATE consulta SET descricao = ? Where id = ?" + "VALUES(?, ?)";
+			String sql = "UPDATE consulta SET descricao = ? Where registro = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, consulta.getDescricao());
 			st.setLong(2, consulta.getId());
@@ -74,7 +74,7 @@ public class ConsultaDAOImpl implements ConsultaDAO{
 	            while( rs.next() ) {
 	                Consulta cons = new Consulta();
 	                
-	            	cons.setId(rs.getInt("id"));
+	            	cons.setId(rs.getInt("registro"));
 					cons.setDescricao(rs.getString("descricao"));
 	            	cons.setCpf(rs.getString("cpf"));
 	                cons.setCrm(rs.getString("crm"));

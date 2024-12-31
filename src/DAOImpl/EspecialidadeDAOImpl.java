@@ -113,13 +113,15 @@ public class EspecialidadeDAOImpl implements EspecialidadeDAO{
 		try{
 			Connection con = gDao.getConnection();
 			//String sql = "SELECT * FROM especialidade WHERE cbo LIKE " + cbo;//'?'";
-			String sql = "SELECT * FROM especialidade WHERE cbo LIKE ?";//'?'";
+			String sql = "SELECT * FROM especialidade WHERE cbo = ?";//'?'";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, cbo);
 			ResultSet rs = st.executeQuery();
 			rs.next();
 			especialidade.setCbo(rs.getString("cbo"));
 			especialidade.setNome(rs.getString("nome"));
+			System.out.println(especialidade.getCbo());
+			System.out.println(especialidade.getNome());
 			rs.close();
 			st.close();
 			con.close();

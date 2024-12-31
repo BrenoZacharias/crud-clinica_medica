@@ -63,6 +63,12 @@ public class TelaAtendenteController implements Autenticavel {
 	public void remover(int codFunc){
 		atendenteDAO.excluir(codFunc);
 	}
+
+	public void limpar(){
+		nome.set("");
+		username.set("");
+		senha.set("");
+	}
 	
 	public Atendente toEntity() {
 		Atendente atendente = new Atendente();

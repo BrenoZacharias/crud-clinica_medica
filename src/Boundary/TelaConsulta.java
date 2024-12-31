@@ -37,8 +37,9 @@ public class TelaConsulta {
 		Button btnAdicionar = new Button(" Adicionar ");
 		Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button(" Pesquisar ");
+		Button btnLimpar = new Button("Limpar");
 		
-		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar);
+		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar, btnLimpar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
@@ -101,11 +102,11 @@ public class TelaConsulta {
                 }
 		);
 		
-		TableColumn<Consulta, String> col5 = new TableColumn<>("Descrição");
+		TableColumn<Consulta, String> col5 = new TableColumn<>("DescriÃ§Ã£o");
 		col5.setCellValueFactory(
 				new PropertyValueFactory<Consulta, String>("descricao")
 				);
-		TableColumn<Consulta, String> col6 = new TableColumn<>("Ações");
+		TableColumn<Consulta, String> col6 = new TableColumn<>("AÃ§Ãµes");
 	    col6.setCellFactory( (tbcol) -> {
             Button btnRemover = new Button("Remover");
             TableCell<Consulta, String> tcell = new TableCell<Consulta, String>() {
@@ -134,7 +135,9 @@ public class TelaConsulta {
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
 			control.fromEntity((Consulta) novo);
 		});
-		
+
+		control.pesquisar();
+
 		btnAdicionar.setOnAction( (e) -> {
 			control.adicionar();
 			new Alert(Alert.AlertType.INFORMATION, "Consulta salva com sucesso").showAndWait();
@@ -150,7 +153,12 @@ public class TelaConsulta {
 		btnPesquisar.setOnAction( (e) -> {
 			control.pesquisar();
 		});
-	
+
+		btnLimpar.setOnAction( (e) -> {
+			control.limpar();
+			control.limpar();
+		});
+
 		VBox vb = new VBox(painel, hb, table);
 		
 		return vb;

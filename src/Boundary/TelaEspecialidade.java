@@ -32,18 +32,19 @@ public class TelaEspecialidade {
 		Button btnAdicionar = new Button("Adicionar");
 		Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button("Pesquisar");
+		Button btnLimpar = new Button("Limpar");
 				
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
 		
-		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar);
+		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar, btnLimpar);
 		
 		GridPane painel = new GridPane();
 		
-		Label lblCbo = new Label(" Código CBO: ");
+		Label lblCbo = new Label(" CÃ³digo CBO: ");
 		Label lblNome = new Label(" Nome da especialidade: ");
-		Label lblAviso = new Label("O CAMPO CBO NÃO É EDITAVEL");
+		Label lblAviso = new Label("O CAMPO CBO NÃ£O Ã‰ EDITÃVEL");
 		
 		lblAviso.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
 
@@ -78,6 +79,10 @@ public class TelaEspecialidade {
 		btnPesquisar.setOnAction( (e) -> {
 			control.pesquisar();
 		});
+
+		btnLimpar.setOnAction( (e) -> {
+			control.limpar();
+		});
 		
 		TableView table = new TableView(); 
 		
@@ -89,7 +94,7 @@ public class TelaEspecialidade {
 		col2.setCellValueFactory(
 				new PropertyValueFactory<Especialidade, String>("nome")
 				);
-		TableColumn<Especialidade, String> col3 = new TableColumn<>("Ações");
+		TableColumn<Especialidade, String> col3 = new TableColumn<>("Aï¿½ï¿½es");
 	    col3.setCellFactory( (tbcol) -> {
             Button btnRemover = new Button("Remover");
             TableCell<Especialidade, String> tcell = new TableCell<Especialidade, String>() {

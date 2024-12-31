@@ -20,7 +20,7 @@ public class TelaPacienteController{
 	public StringProperty sexo = new SimpleStringProperty("");
 	public ObjectProperty nascimento = new SimpleObjectProperty(LocalDate.now());
 	public StringProperty telefone = new SimpleStringProperty("");
-	public StringProperty rua = new SimpleStringProperty("");
+	public StringProperty logradouro = new SimpleStringProperty("");
 	public StringProperty num = new SimpleStringProperty("");
 	public StringProperty cidade = new SimpleStringProperty("");
 	public StringProperty complemento = new SimpleStringProperty("");
@@ -57,6 +57,17 @@ public class TelaPacienteController{
 		pacienteDAO.excluir(cpf);
 		pacientes.addAll(pacienteDAO.pesquisarTodos());
 	}
+	public void limpar() {
+		nome.set("");
+		cpf.set("");
+		sexo.set("");
+		nascimento.set(LocalDate.now());
+		telefone.set("");
+		logradouro.set("");
+		num.set("");
+		cidade.set("");
+		complemento.set("");
+	}
 	public Paciente toEntity() {
 		Paciente paciente = new Paciente();
 		
@@ -65,7 +76,7 @@ public class TelaPacienteController{
 		paciente.setSexo(sexo.get());
 		paciente.setNascm((LocalDate) nascimento.get());
 		paciente.setTelefone(telefone.get());
-		paciente.setRua(rua.get());
+		paciente.setLogradouro(logradouro.get());
 		paciente.setNum(num.get());
 		paciente.setCidade(cidade.get());
 		paciente.setComplemento(complemento.get());
@@ -79,7 +90,7 @@ public class TelaPacienteController{
 		sexo.set(paciente.getSexo());
 		nascimento.set(paciente.getNascm());
 		telefone.set(paciente.getTelefone());
-		rua.set(paciente.getRua());
+		logradouro.set(paciente.getLogradouro());
 		num.set(paciente.getNum());
 		cidade.set(paciente.getCidade());
 		complemento.set(paciente.getComplemento());
