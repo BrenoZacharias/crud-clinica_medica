@@ -120,7 +120,9 @@ public class TelaEspecialidade {
 	    table.getColumns().addAll(col1,col2, col3);
 	    table.setItems(control.getLista());
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
-			control.fromEntity((Especialidade) novo);
+			if(novo != null) {
+				control.fromEntity((Especialidade) novo);
+			}
 		});
 		
 		VBox vb = new VBox(painel, hb, table);

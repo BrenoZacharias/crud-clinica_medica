@@ -177,7 +177,9 @@ public class TelaAtendente {
 		table.getColumns().addAll(col4,col1, col2, col3, col5);
 		table.setItems(control.getLista());
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
-			control.fromEntity((Atendente) novo);
+			if(novo != null) {
+				control.fromEntity((Atendente) novo);
+			}
 		});
 		control.pesquisar();
 		btnPesquisar.setOnAction( (e) -> {

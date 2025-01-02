@@ -168,7 +168,9 @@ public class TelaPaciente {
 		table.getColumns().addAll(col1,col2,col3,col4,col5, col6, col7, col8, col9, col10);
 		table.setItems(control.getLista());
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
-			control.fromEntity((Paciente) novo);
+			if(novo != null) {
+				control.fromEntity((Paciente) novo);
+			}
 		});
 		control.pesquisar();
 		btnAdicionar.setOnAction( (e) -> {

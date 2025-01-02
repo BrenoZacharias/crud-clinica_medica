@@ -133,7 +133,9 @@ public class TelaConsulta {
 		table.getColumns().addAll(col1,col2, col3, col4, col5, col6);
 		table.setItems(control.getLista());
 		table.getSelectionModel().selectedItemProperty().addListener( (obs, old, novo) -> {
-			control.fromEntity((Consulta) novo);
+			if(novo != null) {
+				control.fromEntity((Consulta) novo);
+			}
 		});
 
 		control.pesquisar();
