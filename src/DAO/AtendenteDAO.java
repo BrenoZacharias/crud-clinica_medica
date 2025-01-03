@@ -11,6 +11,7 @@ public interface AtendenteDAO {
 	void atualizar(int codFunc, Atendente atendente);
 	void excluir(int codFunc);
 	List<Atendente> pesquisarTodos() throws SQLException;
+	List<Atendente> pesquisarPorNome(String nome) throws SQLException;
 	boolean encontrarAcesso(String username, String senha) throws SQLException;
 
 }

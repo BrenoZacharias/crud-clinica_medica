@@ -148,4 +148,33 @@ public class AtendenteDAOImpl implements AtendenteDAO{
 	        }
 	        return lista;
 	}
+
+	@Override
+	public List<Atendente> pesquisarPorNome(String nome) {
+		List<Atendente> lista = new ArrayList<>();
+		try {
+			Connection con = gDao.getConnection();
+			String sql = "SELECT * FROM atendente WHERE nome like ?";
+
+			System.out.println(sql);
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, "%" + nome + "%");
+			ResultSet rs = st.executeQuery();
+
+			while( rs.next() ) {
+				Atendente a = new Atendente();
+				a.setCodFunc(rs.getInt("codFunc"));
+				a.setNome(rs.getString("nome"));
+				a.setUsername(rs.getString("username"));
+				a.setSenha(rs.getString("senha"));
+				lista.add(a);
+			}
+			st.close();
+			rs.close();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
 }

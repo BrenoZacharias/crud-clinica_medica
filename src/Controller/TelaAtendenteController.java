@@ -48,9 +48,10 @@ public class TelaAtendenteController implements Autenticavel {
 		}
 	}
 	public void pesquisar() {
+
 		atendentes.clear();
 		try {
-			List<Atendente> lista = atendenteDAO.pesquisarTodos();
+			List<Atendente> lista = atendenteDAO.pesquisarPorNome(nome.get());
 			atendentes.addAll(lista);
 			if(!atendentes.isEmpty()) {
 				fromEntity(atendentes.get(0));

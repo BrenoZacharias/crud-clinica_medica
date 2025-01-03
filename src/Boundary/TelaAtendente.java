@@ -95,7 +95,7 @@ public class TelaAtendente {
     	HBox hb = new HBox();
     	
     	Button btnEditar = new Button("Editar");
-		Button btnPesquisar = new Button(" Pesquisar ");
+		Button btnPesquisar = new Button(" Pesquisar Por Nome");
 		Button btnLimpar = new Button(" Limpar ");
 
 		hb.getChildren().addAll(btnEditar, btnPesquisar, btnLimpar);
