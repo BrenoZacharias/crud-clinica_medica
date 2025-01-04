@@ -30,10 +30,11 @@ public class TelaMedico {
 		
 		Button btnAdicionar = new Button("Adicionar");
 		Button btnEditar = new Button("Editar");
-		Button btnPesquisar = new Button(" Pesquisar ");
+		Button btnListar = new Button(" Listar");
+		Button btnPesquisarPorCrm = new Button(" Pesquisar Por CRM");
 		Button btnLimpar = new Button(" Limpar ");
 		
-		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisar, btnLimpar);
+		hb.getChildren().addAll(btnAdicionar, btnEditar, btnPesquisarPorCrm, btnListar, btnLimpar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
@@ -172,7 +173,7 @@ public class TelaMedico {
 				control.fromEntity(control.medicoEntityViewToMedico(novo));
 			}
 		});
-		control.pesquisar();
+		control.listar();
 		btnAdicionar.setOnAction( (e) -> {
 			control.adicionar();
 		});
@@ -180,9 +181,13 @@ public class TelaMedico {
 		btnEditar.setOnAction( (e) -> {
 			control.atualizar(cbxNomeEspecialidade.getValue());
 		});
-		
-		btnPesquisar.setOnAction( (e) -> {
-			control.pesquisar();
+
+		btnListar.setOnAction( (e) -> {
+			control.listar();
+		});
+
+		btnPesquisarPorCrm.setOnAction( (e) -> {
+			control.pesquisarPorCrm();
 		});
 
 		btnLimpar.setOnAction( (e) -> {

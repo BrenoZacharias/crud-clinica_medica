@@ -1,5 +1,6 @@
 package Controller;
 
+import java.sql.SQLDataException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,7 @@ public class TelaMedicoController {
 			medicoDAO.pesquisarTodos();
 		}
 	}
-	public void pesquisar() {
+	public void listar() {
 		medicos.clear();
 		ArrayList<Medico> medicosEncontrados = (ArrayList<Medico>) medicoDAO.pesquisarTodos();
 		ArrayList<MedicoEntityView> medicosEntityView = medicosToMedicosEntityView(medicosEncontrados);
@@ -91,7 +92,17 @@ public class TelaMedicoController {
 		if(!medicos.isEmpty()) {
 			fromEntity(medicoDAO.pesquisarUm(medicos.get(0).getCrm()));
 		}
-
+	}
+	public void pesquisarPorCrm() {
+		medicos.clear();
+			Medico medico= medicoDAO.pesquisarUm(crm.get());
+			if(medico != null) {
+				MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
+				medicos.addAll(medicoEntityView);
+				if(!medicos.isEmpty()) {
+					fromEntity(medico);
+				}
+			}
 	}
 	public void salvar(String valorComboboxNomeEspecialidade) {
 		medicos.clear();
