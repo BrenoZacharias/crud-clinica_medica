@@ -1,15 +1,14 @@
 package Controller;
 
-import java.sql.SQLDataException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import Boundary.Principal;
 import DAO.EspecialidadeDAO;
 import DAO.MedicoDAO;
 import DAOImpl.EspecialidadeDAOImpl;
 import DAOImpl.MedicoDAOImpl;
-import Entities.Especialidade;
 import Entities.Medico;
 import EntityView.MedicoEntityView;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 public class TelaMedicoController {
 	
@@ -94,14 +94,17 @@ public class TelaMedicoController {
 		}
 	}
 	public void pesquisarPorCrm() {
-		medicos.clear();
-			Medico medico= medicoDAO.pesquisarUm(crm.get());
-			if(medico != null) {
+			medicos.clear();
+			Medico medico = medicoDAO.pesquisarUm(crm.get());
+			if(medico.getCrm() != null) {
 				MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
 				medicos.addAll(medicoEntityView);
 				if(!medicos.isEmpty()) {
 					fromEntity(medico);
 				}
+			} else {
+				limpar();
+				Controller.Alerts.showAlert("Erro na pesquisa",null,"Não existe médico com o CRM informado!", Alert.AlertType.ERROR);
 			}
 	}
 	public void salvar(String valorComboboxNomeEspecialidade) {

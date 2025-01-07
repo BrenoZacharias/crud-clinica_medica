@@ -6,7 +6,6 @@ import java.util.List;
 
 import DAO.GenericDAO;
 import DAO.MedicoDAO;
-import Entities.Especialidade;
 import Entities.Medico;
 
 public class MedicoDAOImpl implements MedicoDAO{
@@ -114,7 +113,7 @@ public class MedicoDAOImpl implements MedicoDAO{
 			st.setString(1, crm);
 			ResultSet rs = st.executeQuery();
 			rs.next();
-			medico.setCrm(crm);
+			medico.setCrm(rs.getString("crm"));
 			medico.setNome(rs.getString("nome"));
 			medico.setCboEspecialidade(rs.getString("especialidade"));
 			medico.setTelefone(rs.getString("telefone"));
@@ -126,8 +125,10 @@ public class MedicoDAOImpl implements MedicoDAO{
 			rs.close();
 			st.close();
 			con.close();
-		}catch (SQLException e) {
-			e.printStackTrace();
+		}catch (SQLDataException sqlDataException) {
+			//e.printStackTrace();
+		} catch (SQLException sqlException) {
+			//e.printStackTrace();
 		}
 		return medico;
 	}

@@ -1,9 +1,7 @@
 package Controller;
 
 import Boundary.Principal;
-import DAO.AtendenteDAO;
 import DAOImpl.AtendenteDAOImpl;
-import Interface.Autenticavel;
 import javafx.scene.control.Alert;
 
 import java.sql.SQLException;
