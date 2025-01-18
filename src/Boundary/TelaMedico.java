@@ -1,14 +1,10 @@
 package Boundary;
 
 import java.time.LocalDate;
-
+import java.util.function.UnaryOperator;
 import Controller.TelaMedicoController;
-import Entities.Especialidade;
-import Entities.Medico;
 import EntityView.MedicoEntityView;
 import javafx.beans.binding.Bindings;
-//import Entities.Medico;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -59,6 +55,44 @@ public class TelaMedico {
 		TextField txtCidade = new TextField();
 		TextField txtComp = new TextField();
 		TextField txtNasc = new TextField();
+
+
+		// Define um UnaryOperator para formatar a entrada
+		UnaryOperator<TextFormatter.Change> phoneFormatter = change -> {
+			String oldText = change.getControlText();
+			String newText = change.getControlNewText();
+
+			// Remove tudo o que não for número
+			newText = newText.replaceAll("[^\\d]", "");
+
+			// Aplica a máscara no formato (XX) XXXXX-XXXX
+			String formattedText = newText;
+
+			if (formattedText.length() > 11) {
+				formattedText = formattedText.substring(0, 11);
+			}
+			if (formattedText.length() > 6) {
+				formattedText = "(" + formattedText.substring(0, 2) + ") " + formattedText.substring(2, 7) + "-" + formattedText.substring(7);
+			} else if (formattedText.length() > 2) {
+				formattedText = "(" + formattedText.substring(0, 2) + ") " + formattedText.substring(2);
+			} else if (formattedText.length() == 5) {
+				formattedText = "(" + formattedText.substring(0, 2) + ") " + formattedText.substring(2, 6);
+			}
+
+			// Calcula a diferença de caracteres e ajusta o cursor
+			int diff = formattedText.length() - newText.length();
+			int caretPosition = change.getCaretPosition() + diff;
+			caretPosition = Math.max(0, Math.min(formattedText.length(), caretPosition));
+
+			// Atualiza o texto e a posição do cursor
+			change.setText(formattedText);
+			change.setRange(0, oldText.length());  // Define o intervalo de alteração do texto
+			change.setCaretPosition(caretPosition);  // Define a posição do cursor após a alteração
+			return change;
+		};
+		// Aplica o TextFormatter com a máscara
+		TextFormatter<String> textFormatter = new TextFormatter<>(phoneFormatter);
+		txtTel.setTextFormatter(textFormatter);
 
 		ComboBox<String> cbxNomeEspecialidade;
 		cbxNomeEspecialidade = new ComboBox<>();
@@ -175,7 +209,7 @@ public class TelaMedico {
 		});
 		control.listar();
 		btnAdicionar.setOnAction( (e) -> {
-			control.adicionar();
+			control.adicionar(cbxNomeEspecialidade.getValue());
 		});
 		
 		btnEditar.setOnAction( (e) -> {

@@ -17,9 +17,12 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
 public class TelaMedicoController {
-	
+
+	public String massaDeDadosInvalida = "";
+
 	public StringProperty nome = new SimpleStringProperty("");
 	public StringProperty telefone = new SimpleStringProperty("");
 	public StringProperty crm = new SimpleStringProperty("");
@@ -45,7 +48,7 @@ public class TelaMedicoController {
 	public void limpar() {
 		nome.set("");
 		telefone.set("");
-		crm.set("");
+		crm.set("CRM-");
 		logradouro.set("");
 		num.set("");
 		cidade.set("");
@@ -55,23 +58,15 @@ public class TelaMedicoController {
 	}
 
 	public void adicionar(String valorComboboxNomeEspecialidade) {
-		Medico medico = toEntity(valorComboboxNomeEspecialidade);
-		medicoDAO.adicionar(medico);
-		//medicos.addAll(medicoDAO.pesquisarTodos());
-		System.out.println("valor cbo: " + medico.getCboEspecialidade());
-		medico = medicoDAO.pesquisarUm(medico.getCrm());
-		MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
-		medicos.add(medicoEntityView);
-	}
-
-	public void adicionar() {
-		Medico medico = toEntity();
-		medicoDAO.adicionar(medico);
-		//medicos.addAll(medicoDAO.pesquisarTodos());
-		System.out.println("valor cbo: " + medico.getCboEspecialidade());
-		medico = medicoDAO.pesquisarUm(medico.getCrm());
-		MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
-		medicos.add(medicoEntityView);
+		if(validaMassaDeDadosMedico()) {
+			Medico medico = toEntity(valorComboboxNomeEspecialidade);
+			medicoDAO.adicionar(medico);
+			//medicos.addAll(medicoDAO.pesquisarTodos());
+			System.out.println("valor cbo: " + medico.getCboEspecialidade());
+			medico = medicoDAO.pesquisarUm(medico.getCrm());
+			MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
+			medicos.add(medicoEntityView);
+		}
 	}
 
 	public void atualizar(String valorComboboxNomeEspecialidade) {
@@ -139,21 +134,48 @@ public class TelaMedicoController {
 		return m;
 	}
 
-	public Medico toEntity() {
-		Medico m = new Medico();
+	private boolean validaMassaDeDadosMedico() {
+		massaDeDadosInvalida="";
+		if (nome.getValue().length()>100){
+			massaDeDadosInvalida+=("nome é muito longo\n");
+		}
+		if (nome.getValue().length()<5){
+			massaDeDadosInvalida+=("nome é muito curto\n");
+		}
+		if (especialidade.getValue()==""){
+			massaDeDadosInvalida+=("uma especialidade deve ser selecionada\n");
+		}
+		if (telefone.getValue().length()!=15){
+			massaDeDadosInvalida+=("telefone deve conter 11 digitos\n");
+		}
+		if (telefone.getValue().length()!=15){
+			massaDeDadosInvalida+=("telefone deve conter 11 digitos\n");
+		}
+		System.out.println();
+		if (!crm.getValue().matches("^[cC][rR][mM]-[a-zA-Z]{2} \\d{6}$")){
+			massaDeDadosInvalida+=("crm inválido. exemplo: CRM-SP 123456. CRM-[sigla do estado] [6 números do crm ]\n");
+		} else {
+			String siglaEstados[] = {"ac", "al", "ap", "am", "ba", "ce", "df", "es", "go", "ma", "mt", "ms", "mg", "pa",
+					"pb", "pr", "pe", "pi", "rr", "ro", "rj", "rn", "rs", "sc", "sp", "se", "to"};
+			boolean ehSiglaEstado = false;
+			for (String siglaEstado :
+					siglaEstados) {
+				if(crm.getValue().substring(4,6).equalsIgnoreCase(siglaEstado)){
+					ehSiglaEstado = true;
+				}
+			}
+			if(!ehSiglaEstado){
+				massaDeDadosInvalida+=("crm inválido. exemplo: CRM-SP 123456. CRM-[sigla do estado] [6 números do crm]\n");
+			}
+		}
+		if(!massaDeDadosInvalida.isEmpty()){
+			Controller.Alerts.showAlert("Dados inválidos",null, massaDeDadosInvalida, Alert.AlertType.ERROR);
+			return false;
+		}
 
-		m.setNome(nome.get());
-		m.setTelefone(telefone.get());
-		m.setCrm(crm.get());
-		m.setLogradouro(logradouro.get());
-		m.setNum(num.get());
-		m.setCidade(cidade.get());
-		m.setComplemento(complemento.get());
-		m.setNascimento((LocalDate) nascimento.get());
-		m.setCboEspecialidade(especialidadeDAO.findEspecialidadeByNome(especialidade.getValue()).getCbo());
-		return m;
+		return true;
 	}
-	
+
 	public void fromEntity(Medico medico) {
 		nome.set(medico.getNome());
 		telefone.set(medico.getTelefone());
@@ -173,7 +195,7 @@ public class TelaMedicoController {
 	public ObservableList<String> getObservableListOfNomeEspecialidades() {
 			List<String> nomeEspecialidades = new ArrayList<>();
 			especialidadeDAO.pesquisarTodos().forEach(e -> nomeEspecialidades.add(e.getNome()));
-			return FXCollections.observableList(nomeEspecialidades);
+		return FXCollections.observableList(nomeEspecialidades);
 	}
 
 	private MedicoEntityView medicoToMedicoEntityView (Medico medico) {
