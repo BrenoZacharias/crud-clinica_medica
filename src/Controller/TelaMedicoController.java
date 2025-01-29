@@ -3,8 +3,6 @@ package Controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import Boundary.Principal;
 import DAO.EspecialidadeDAO;
 import DAO.MedicoDAO;
 import DAOImpl.EspecialidadeDAOImpl;
@@ -17,8 +15,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
-
 public class TelaMedicoController {
 
 	public String massaDeDadosInvalida = "";
@@ -62,7 +58,6 @@ public class TelaMedicoController {
 			Medico medico = toEntity(valorComboboxNomeEspecialidade);
 			medicoDAO.adicionar(medico);
 			//medicos.addAll(medicoDAO.pesquisarTodos());
-			System.out.println("valor cbo: " + medico.getCboEspecialidade());
 			medico = medicoDAO.pesquisarUm(medico.getCrm());
 			MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
 			medicos.add(medicoEntityView);
@@ -70,13 +65,15 @@ public class TelaMedicoController {
 	}
 
 	public void atualizar(String valorComboboxNomeEspecialidade) {
-		Medico  medico = toEntity(valorComboboxNomeEspecialidade);
-		if(medico.getCrm() == "") {
-			medicoDAO.adicionar(medico);
-			medicoDAO.pesquisarTodos();
-		}else {
-			medicoDAO.atualizar(crm.get(), medico);
-			medicoDAO.pesquisarTodos();
+		if(validaMassaDeDadosMedico()) {
+			Medico medico = toEntity(valorComboboxNomeEspecialidade);
+			if (medico.getCrm() == "") {
+				medicoDAO.adicionar(medico);
+				medicoDAO.pesquisarTodos();
+			} else {
+				medicoDAO.atualizar(crm.get(), medico);
+				medicoDAO.pesquisarTodos();
+			}
 		}
 	}
 	public void listar() {
@@ -102,16 +99,6 @@ public class TelaMedicoController {
 				Controller.Alerts.showAlert("Erro na pesquisa",null,"Não existe médico com o CRM informado!", Alert.AlertType.ERROR);
 			}
 	}
-	public void salvar(String valorComboboxNomeEspecialidade) {
-		medicos.clear();
-		Medico medico = toEntity(valorComboboxNomeEspecialidade);
-		if(medico.getCrm() == "") {
-			medicoDAO.adicionar(medico);
-		}else {
-			medicoDAO.atualizar(crm.get(), medico);
-		}
-		medicoDAO.pesquisarTodos();
-	}
 
 	public void excluir(String crm) {
 		medicos.clear();
@@ -136,11 +123,8 @@ public class TelaMedicoController {
 
 	private boolean validaMassaDeDadosMedico() {
 		massaDeDadosInvalida="";
-		if (nome.getValue().length()>100){
-			massaDeDadosInvalida+=("nome é muito longo\n");
-		}
-		if (nome.getValue().length()<5){
-			massaDeDadosInvalida+=("nome é muito curto\n");
+		if (!nome.getValue().matches("^[^0-9!@#$%&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?`´\\^~§±\\\\]{3,100}$")){
+			massaDeDadosInvalida+=("nome inválido\n");
 		}
 		if (especialidade.getValue()==""){
 			massaDeDadosInvalida+=("uma especialidade deve ser selecionada\n");
@@ -148,10 +132,6 @@ public class TelaMedicoController {
 		if (telefone.getValue().length()!=15){
 			massaDeDadosInvalida+=("telefone deve conter 11 digitos\n");
 		}
-		if (telefone.getValue().length()!=15){
-			massaDeDadosInvalida+=("telefone deve conter 11 digitos\n");
-		}
-		System.out.println();
 		if (!crm.getValue().matches("^[cC][rR][mM]-[a-zA-Z]{2} \\d{6}$")){
 			massaDeDadosInvalida+=("crm inválido. exemplo: CRM-SP 123456. CRM-[sigla do estado] [6 números do crm ]\n");
 		} else {
@@ -167,6 +147,18 @@ public class TelaMedicoController {
 			if(!ehSiglaEstado){
 				massaDeDadosInvalida+=("crm inválido. exemplo: CRM-SP 123456. CRM-[sigla do estado] [6 números do crm]\n");
 			}
+		}
+		if (!logradouro.getValue().matches("^(?=.*[a-zA-Z])[^^!@#$%&*()_+\\-=\\[\\]{};:\\\"\\|<>\\/?`´^~§±\\\\]{3,50}$")){
+			massaDeDadosInvalida+=("logradouro inválido\n");
+		}
+		if (!num.getValue().matches("[0-9]")){
+			massaDeDadosInvalida+=("número inválido\n");
+		}
+		if (!cidade.getValue().matches("^(?=.*[a-zA-Z])[^0-9^!@#$%&*()_+\\-=\\[\\]{};:\\\"\\|<>\\/?`´^~§±\\\\]{3,100}$")){
+			massaDeDadosInvalida+=("cidade inválida\n");
+		}
+		if (!complemento.getValue().matches("^.{0,100}$")){
+			massaDeDadosInvalida+=("complemento inválido\n");
 		}
 		if(!massaDeDadosInvalida.isEmpty()){
 			Controller.Alerts.showAlert("Dados inválidos",null, massaDeDadosInvalida, Alert.AlertType.ERROR);

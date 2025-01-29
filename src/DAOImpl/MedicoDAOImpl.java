@@ -18,7 +18,6 @@ public class MedicoDAOImpl implements MedicoDAO{
 			Connection con = gDao.getConnection();
 			String sql = "INSERT INTO medico(nome, especialidade, telefone, crm, logradouro, num, cidade, complemento, nascimento)" + "VALUES(?, ?, ?, ?, ?, ?, ?,?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
-			System.out.println(medico.getNome());
 			st.setString(1, medico.getNome());
 			st.setString(2, medico.getCboEspecialidade());
  			st.setString(3, medico.getTelefone());
@@ -77,7 +76,6 @@ public class MedicoDAOImpl implements MedicoDAO{
         try {
         	Connection con = gDao.getConnection();
             String sql = "SELECT * FROM medico";
-            System.out.println(sql);
             PreparedStatement st = con.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
