@@ -13,10 +13,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 public class TelaAtendenteController implements Autenticavel {
 
-		public StringProperty nome = new SimpleStringProperty("");
+	public String massaDeDadosInvalida = "";
+
+	public StringProperty nome = new SimpleStringProperty("");
 		public StringProperty username = new SimpleStringProperty("");
 		public StringProperty senha = new SimpleStringProperty("");
 		public IntegerProperty codFunc = new SimpleIntegerProperty(0);
@@ -29,26 +32,30 @@ public class TelaAtendenteController implements Autenticavel {
 	private ObservableList<Atendente> atendentes = FXCollections.observableArrayList();
 
 	public void adicionar() throws SQLException {
-		Atendente atendente = toEntity();
-		atendenteDAO.adicionar(atendente);
-		atendenteDAO.pesquisarTodos();
-	}
-	public void salvar(){
-		Atendente atendente = toEntity();
-		try {
-			if(atendente.getCodFunc() == 0) {
-				atendenteDAO.adicionar(atendente);
-				atendenteDAO.pesquisarTodos();
-			}else {
-				atendenteDAO.atualizar(codFunc.get(), atendente);
-				atendenteDAO.pesquisarTodos();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(validaMassaDeDadosAtendente()){
+			Atendente atendente = toEntity();
+			atendenteDAO.adicionar(atendente);
+			atendenteDAO.pesquisarTodos();
 		}
 	}
-	public void pesquisar() {
+	public void salvar() throws SQLException {
+		if (validaMassaDeDadosAtendente()) {
+			Atendente atendente = toEntity();
+			try {
+				if (atendente.getCodFunc() == 0) {
+					atendenteDAO.adicionar(atendente);
+					atendenteDAO.pesquisarTodos();
+				} else {
+					atendenteDAO.atualizar(codFunc.get(), atendente);
+					atendenteDAO.pesquisarTodos();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
+	public void pesquisar() {
 		atendentes.clear();
 		try {
 			List<Atendente> lista = atendenteDAO.pesquisarPorNome(nome.get());
@@ -100,5 +107,26 @@ public class TelaAtendenteController implements Autenticavel {
 	}
 	public ObservableList<Atendente> getLista(){
 		return atendentes;
+	}
+
+	private boolean validaMassaDeDadosAtendente() throws SQLException {
+		massaDeDadosInvalida="";
+		if (!nome.getValue().matches("^[^0-9!@#$%&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?`´\\^~§±\\\\]{3,100}$")){
+			massaDeDadosInvalida+=("nome inválido\n");
+		}
+		if (!username.getValue().matches("^[a-zA-Z0-9.]{2,30}$")){
+			massaDeDadosInvalida+=("username inválido. Deve conter de 2 a 30 caracteres. Caracteres permitidos: a-z, A-Z, 0-9 e .\n");
+		}
+		if (!senha.getValue().matches("^.{8,20}$")){
+			massaDeDadosInvalida+=("senha deve conter de 8 a 20 caracteres\n");
+		}
+		if(atendenteDAO.pesquisarPorCodigoFuncionario(codFunc.getValue())==null){
+			massaDeDadosInvalida+=("código inválido\n");
+		}
+		if(!massaDeDadosInvalida.isEmpty()){
+			Controller.Alerts.showAlert("Dados inválidos",null, massaDeDadosInvalida, Alert.AlertType.ERROR);
+			return false;
+		}
+		return true;
 	}
 }

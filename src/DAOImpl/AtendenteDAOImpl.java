@@ -177,4 +177,31 @@ public class AtendenteDAOImpl implements AtendenteDAO{
 		}
 		return lista;
 	}
+
+	@Override
+	public Atendente pesquisarPorCodigoFuncionario(int codigoFuncionario) {
+		Atendente a = null;
+		try {
+			Connection con = gDao.getConnection();
+			String sql = "SELECT * FROM atendente WHERE codFunc = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, "" + codigoFuncionario);
+			ResultSet rs = st.executeQuery();
+			rs.next();
+			System.out.println(rs.first());
+			if (rs.first()) {
+				a = new Atendente();
+				a.setCodFunc(rs.getInt("codFunc"));
+				a.setNome(rs.getString("nome"));
+				a.setUsername(rs.getString("username"));
+				a.setSenha(rs.getString("senha"));
+			}
+			st.close();
+			rs.close();
+			con.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return a;
+	}
 }
