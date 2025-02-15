@@ -7,20 +7,20 @@ import java.util.List;
 import DAO.GenericDAO;
 import DAO.MedicoDAO;
 import Entities.Medico;
+import javafx.scene.control.Alert;
 
 public class MedicoDAOImpl implements MedicoDAO{
 		
 	GenericDAO gDao = new GenericDAO();
 	
 	@Override
-	public void adicionar(Medico medico) {
-		try {
+	public void adicionar(Medico medico) throws SQLException{
 			Connection con = gDao.getConnection();
 			String sql = "INSERT INTO medico(nome, especialidade, telefone, crm, logradouro, num, cidade, complemento, nascimento)" + "VALUES(?, ?, ?, ?, ?, ?, ?,?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, medico.getNome());
 			st.setString(2, medico.getCboEspecialidade());
- 			st.setString(3, medico.getTelefone());
+			st.setString(3, medico.getTelefone());
 			st.setString(4, medico.getCrm());
 			st.setString(5, medico.getLogradouro());
 			st.setString(6, medico.getNum());
@@ -30,9 +30,6 @@ public class MedicoDAOImpl implements MedicoDAO{
 			st.executeUpdate();
 			st.close();
 			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}	
 	}
 	@Override
 	public void atualizar(String crm, Medico medico) {
@@ -51,6 +48,9 @@ public class MedicoDAOImpl implements MedicoDAO{
 			st.setString(9, medico.getCrm());
 			
 			st.executeUpdate();
+			System.out.println(st.getMetaData());
+			System.out.println(st.getResultSet());
+
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

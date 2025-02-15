@@ -1,5 +1,7 @@
 package Controller;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,26 +56,32 @@ public class TelaMedicoController {
 	}
 
 	public void adicionar(String valorComboboxNomeEspecialidade) {
-		if(validaMassaDeDadosMedico()) {
-			Medico medico = toEntity(valorComboboxNomeEspecialidade);
-			medicoDAO.adicionar(medico);
-			//medicos.addAll(medicoDAO.pesquisarTodos());
-			medico = medicoDAO.pesquisarUm(medico.getCrm());
-			MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
-			medicos.add(medicoEntityView);
+		try {
+			if(validaMassaDeDadosMedico()) {
+				Medico medico = toEntity(valorComboboxNomeEspecialidade);
+				medicoDAO.adicionar(medico);
+				//medicos.addAll(medicoDAO.pesquisarTodos());
+				medico = medicoDAO.pesquisarUm(medico.getCrm());
+				MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
+				medicos.add(medicoEntityView);
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			Controller.Alerts.showAlert("Erro ao adicionar médico",null,"CRM já cadastrado no sistema!", Alert.AlertType.ERROR);
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
 	}
 
 	public void atualizar(String valorComboboxNomeEspecialidade) {
 		if(validaMassaDeDadosMedico()) {
 			Medico medico = toEntity(valorComboboxNomeEspecialidade);
-			if (medico.getCrm() == "") {
-				medicoDAO.adicionar(medico);
-				medicoDAO.pesquisarTodos();
-			} else {
+//			if (medico.getCrm() == "") {
+//				medicoDAO.adicionar(medico);
+//				medicoDAO.pesquisarTodos();
+//			} else {
 				medicoDAO.atualizar(crm.get(), medico);
 				medicoDAO.pesquisarTodos();
-			}
+//			}
 		}
 	}
 	public void listar() {
@@ -105,7 +113,7 @@ public class TelaMedicoController {
 		medicoDAO.excluir(crm);
 		medicos.addAll(medicosToMedicosEntityView((ArrayList<Medico>) medicoDAO.pesquisarTodos()));
 	}
-	
+
 	public Medico toEntity(String valorComboboxNomeEspecialidade) {
 		Medico m = new Medico();
 		
