@@ -9,7 +9,7 @@ import Entities.Medico;
 public interface MedicoDAO {
 	void adicionar(Medico medico) throws SQLException;
 	void atualizar(String crm, Medico medico);
-	void excluir(String crm);
+	void excluir(String crm) throws SQLException;
 	List<Medico> pesquisarTodos();
 	Medico pesquisarUm(String crm);
 }

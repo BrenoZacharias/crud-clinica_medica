@@ -57,18 +57,13 @@ public class MedicoDAOImpl implements MedicoDAO{
 		}	
 	}
 	@Override
-	public void excluir(String crm) {
-		try {
-			Connection con = gDao.getConnection();
+	public void excluir(String crm) throws SQLException{
+		Connection con = gDao.getConnection();
 			String sql = "DELETE FROM medico WHERE crm = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, crm);
 			st.executeUpdate();
 			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
 	}
 	@Override
 	public List<Medico> pesquisarTodos() {

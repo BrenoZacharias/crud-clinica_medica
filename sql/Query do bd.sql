@@ -45,6 +45,8 @@ CREATE TABLE Medico (
     complemento VARCHAR(100),
     nascimento DATE NOT NULL,
     FOREIGN KEY (especialidade) REFERENCES Especialidade (cbo)
+    CONSTRAINT chk_crm_not_empty CHECK (crm <> '') -- TESTAR Garante que o CRM não seja uma string vazia
+
     );
 CREATE TABLE Consulta (
 	registro INT AUTO_INCREMENT PRIMARY KEY,

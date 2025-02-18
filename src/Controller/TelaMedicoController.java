@@ -102,9 +102,20 @@ public class TelaMedicoController {
 	}
 
 	public void excluir(String crm) {
-		medicos.clear();
-		medicoDAO.excluir(crm);
-		medicos.addAll(medicosToMedicosEntityView((ArrayList<Medico>) medicoDAO.pesquisarTodos()));
+		try {
+			medicos.clear();
+			medicoDAO.excluir(crm);
+			medicos.removeIf(e -> e.getCrm() == crm);
+			limpar();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			if(e.getMessage().contains("consulta")){
+				Alerts.showAlert("Erro na exclusão", null, "O médico possui consultas a fazer, elas precisam ser realizadas ou excluidas para que o médico possa ser excluído", Alert.AlertType.ERROR);
+			};
+			listar();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public Medico toEntity(String valorComboboxNomeEspecialidade) {
