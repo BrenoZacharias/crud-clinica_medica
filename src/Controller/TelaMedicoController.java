@@ -60,10 +60,7 @@ public class TelaMedicoController {
 			if(validaMassaDeDadosMedico()) {
 				Medico medico = toEntity(valorComboboxNomeEspecialidade);
 				medicoDAO.adicionar(medico);
-				//medicos.addAll(medicoDAO.pesquisarTodos());
-				medico = medicoDAO.pesquisarUm(medico.getCrm());
-				MedicoEntityView medicoEntityView = medicoToMedicoEntityView(medico);
-				medicos.add(medicoEntityView);
+				medicos.add(medicoToMedicoEntityView(medico));
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {
 			Controller.Alerts.showAlert("Erro ao adicionar médico",null,"CRM já cadastrado no sistema!", Alert.AlertType.ERROR);
@@ -75,13 +72,9 @@ public class TelaMedicoController {
 	public void atualizar(String valorComboboxNomeEspecialidade) {
 		if(validaMassaDeDadosMedico()) {
 			Medico medico = toEntity(valorComboboxNomeEspecialidade);
-//			if (medico.getCrm() == "") {
-//				medicoDAO.adicionar(medico);
-//				medicoDAO.pesquisarTodos();
-//			} else {
-				medicoDAO.atualizar(crm.get(), medico);
-				medicoDAO.pesquisarTodos();
-//			}
+			medicoDAO.atualizar(crm.get(), medico);
+			medicos.removeIf(e->e.getCrm()==medico.getCrm());
+			medicos.add(medicoToMedicoEntityView(medico));
 		}
 	}
 	public void listar() {
