@@ -104,7 +104,7 @@ public class AtendenteDAOImpl implements AtendenteDAO{
 		boolean x;
 		try{
 			Connection con = gDao.getConnection();
-			String sql = "SELECT * FROM atendente WHERE username = ? AND senha = ?";
+			String sql = "SELECT * FROM atendente WHERE username = ? AND BINARY senha = ?";
 
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);

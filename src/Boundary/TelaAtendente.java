@@ -1,6 +1,7 @@
 package Boundary;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import Controller.TelaAtendenteController;
 import Entities.Atendente;
@@ -96,19 +97,21 @@ public class TelaAtendente {
     	
     	Button btnEditar = new Button("Editar");
 		Button btnPesquisar = new Button(" Pesquisar Por Nome");
-		Button btnLimpar = new Button(" Limpar ");
 
-		hb.getChildren().addAll(btnEditar, btnPesquisar, btnLimpar);
+		hb.getChildren().addAll(btnEditar, btnPesquisar);
 		hb.setAlignment(Pos.BASELINE_CENTER);
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(10,10,10,10));
 		
 		GridPane painel = new GridPane();
-		
+
+		Label lblCodigo = new Label ("Código:");
 		Label lblNome = new Label ("Nome:");
 		Label lblUsername = new Label ("Username:");
 		Label lblSenha = new Label("Senha");
-		
+
+		TextField txtCodigo = new TextField();
+		txtCodigo.setEditable(false);
 		TextField txtNome = new TextField();
 		TextField txtUsername = new TextField();
 		TextField txtSenha = new TextField();
@@ -116,17 +119,23 @@ public class TelaAtendente {
 		Bindings.bindBidirectional(txtUsername.textProperty(), control.username);
         Bindings.bindBidirectional(txtSenha.textProperty(), control.senha);
         Bindings.bindBidirectional(txtNome.textProperty(), control.nome);
+
+		DecimalFormat format = new DecimalFormat();
+		format.setGroupingUsed(false);
+		Bindings.bindBidirectional(txtCodigo.textProperty(), control.codFunc, new NumberStringConverter(format));
 		
 		painel.setPadding(new Insets(10,10,10,10));
 		painel.setVgap(10);
 		painel.setHgap(10);
-		
-		painel.add(lblNome, 0, 0);
-		painel.add(txtNome, 1, 0);
-		painel.add(lblUsername, 0, 1);
-		painel.add(txtUsername, 1, 1);
-		painel.add(lblSenha, 0, 2);
-		painel.add(txtSenha, 1, 2);
+
+		painel.add(lblCodigo, 0, 0);
+		painel.add(txtCodigo, 1, 0);
+		painel.add(lblNome, 0, 1);
+		painel.add(txtNome, 1, 1);
+		painel.add(lblUsername, 0, 2);
+		painel.add(txtUsername, 1, 2);
+		painel.add(lblSenha, 0, 3);
+		painel.add(txtSenha, 1, 3);
 
 		txtNome.setMaxWidth(150);
 		txtUsername.setMaxWidth(150);
@@ -163,7 +172,7 @@ public class TelaAtendente {
 	                        btnRemover.setOnAction( (e) -> {
 	                            Atendente a = getTableView().getItems().get(getIndex());
 	                            control.remover(a.getCodFunc());
-	                            control.pesquisar();
+	                            control.pesquisarTodos();
 	                        });
 	                        setGraphic(btnRemover);
 	                        setText(null);
@@ -181,9 +190,9 @@ public class TelaAtendente {
 				control.fromEntity((Atendente) novo);
 			}
 		});
-		control.pesquisar();
+		control.pesquisarTodos();
 		btnPesquisar.setOnAction( (e) -> {
-			control.pesquisar();
+			control.pesquisarPorNome();
 		});
 		btnEditar.setOnAction( (e) -> {
 			try {
@@ -192,9 +201,7 @@ public class TelaAtendente {
 				e1.printStackTrace();
 			}
 		});
-		btnLimpar.setOnAction( (e) -> {
-			control.limpar();
-		});
+
 		VBox vb = new VBox(painel, hb, table);
 		
 		return vb;	

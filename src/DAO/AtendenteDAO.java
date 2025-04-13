@@ -14,5 +14,5 @@ public interface AtendenteDAO {
 	List<Atendente> pesquisarPorNome(String nome) throws SQLException;
 	Atendente pesquisarPorCodigoFuncionario(int codigoFuncionario) throws SQLException;
 	boolean encontrarAcesso(String username, String senha) throws SQLException;
-
+	boolean verificarCodigo(int codigo);
 }

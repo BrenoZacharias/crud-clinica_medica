@@ -68,7 +68,6 @@ public class TelaEspecialidade {
 
 		btnAdicionar.setOnAction( (e) -> {
 			control.adicionar();
-			new Alert(Alert.AlertType.INFORMATION, "Especialidade Adicionada com sucesso").showAndWait();
 		});
 		
 		btnEditar.setOnAction( (e) -> {

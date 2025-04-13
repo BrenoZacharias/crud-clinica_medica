@@ -32,30 +32,38 @@ public class TelaAtendenteController implements Autenticavel {
 	private ObservableList<Atendente> atendentes = FXCollections.observableArrayList();
 
 	public void adicionar() throws SQLException {
-		if(validaMassaDeDadosAtendente()){
+		if(validaMassaDeDadosParaCadastrarAtendente()){
 			Atendente atendente = toEntity();
 			atendenteDAO.adicionar(atendente);
 			atendenteDAO.pesquisarTodos();
 		}
 	}
 	public void salvar() throws SQLException {
-		if (validaMassaDeDadosAtendente()) {
+		if (validaMassaDeDadosParaAlterarAtendente()) {
 			Atendente atendente = toEntity();
 			try {
-				if (atendente.getCodFunc() == 0) {
-					atendenteDAO.adicionar(atendente);
-					atendenteDAO.pesquisarTodos();
-				} else {
-					atendenteDAO.atualizar(codFunc.get(), atendente);
-					atendenteDAO.pesquisarTodos();
-				}
+				atendenteDAO.atualizar(codFunc.get(), atendente);
+				atendenteDAO.pesquisarTodos();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void pesquisar() {
+	public void pesquisarTodos() {
+		atendentes.clear();
+		try {
+			List<Atendente> lista = atendenteDAO.pesquisarTodos();
+			atendentes.addAll(lista);
+			if(!atendentes.isEmpty()) {
+				fromEntity(atendentes.get(0));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void pesquisarPorNome() {
 		atendentes.clear();
 		try {
 			List<Atendente> lista = atendenteDAO.pesquisarPorNome(nome.get());
@@ -70,12 +78,6 @@ public class TelaAtendenteController implements Autenticavel {
 
 	public void remover(int codFunc){
 		atendenteDAO.excluir(codFunc);
-	}
-
-	public void limpar(){
-		nome.set("");
-		username.set("");
-		senha.set("");
 	}
 	
 	public Atendente toEntity() {
@@ -109,18 +111,60 @@ public class TelaAtendenteController implements Autenticavel {
 		return atendentes;
 	}
 
-	private boolean validaMassaDeDadosAtendente() throws SQLException {
-		massaDeDadosInvalida="";
+	private boolean validaNome(){
 		if (!nome.getValue().matches("^[^0-9!@#$%&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?`´\\^~§±\\\\]{3,100}$")){
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validaUsername(){
+		if (!username.getValue().matches("^[a-zA-Z0-9.]{2,30}$")){
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validaSenha(){
+		if (!senha.getValue().matches("^.{8,20}$")){
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validaMassaDeDadosParaAlterarAtendente() throws SQLException {
+		massaDeDadosInvalida="";
+		if(!validaNome()){
 			massaDeDadosInvalida+=("nome inválido\n");
 		}
-		if (!username.getValue().matches("^[a-zA-Z0-9.]{2,30}$")){
+		if(!validaUsername()){
 			massaDeDadosInvalida+=("username inválido. Deve conter de 2 a 30 caracteres. Caracteres permitidos: a-z, A-Z, 0-9 e .\n");
 		}
-		if (!senha.getValue().matches("^.{8,20}$")){
+		if (!validaSenha()){
 			massaDeDadosInvalida+=("senha deve conter de 8 a 20 caracteres\n");
 		}
-		if(atendenteDAO.pesquisarPorCodigoFuncionario(codFunc.getValue())==null){
+/*		if(atendenteDAO.pesquisarPorCodigoFuncionario(codFunc.getValue())==null){
+			massaDeDadosInvalida+=("código inválido\n");
+		}*/
+		if(!massaDeDadosInvalida.isEmpty()){
+			Controller.Alerts.showAlert("Dados inválidos",null, massaDeDadosInvalida, Alert.AlertType.ERROR);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validaMassaDeDadosParaCadastrarAtendente() throws SQLException {
+		massaDeDadosInvalida="";
+		if(!validaNome()){
+			massaDeDadosInvalida+=("nome inválido\n");
+		}
+		if(!validaUsername()){
+			massaDeDadosInvalida+=("username inválido. Deve conter de 2 a 30 caracteres. Caracteres permitidos: a-z, A-Z, 0-9 e .\n");
+		}
+		if (!validaSenha()){
+			massaDeDadosInvalida+=("senha deve conter de 8 a 20 caracteres\n");
+		}
+		if(!atendenteDAO.verificarCodigo(codFunc.getValue())){
 			massaDeDadosInvalida+=("código inválido\n");
 		}
 		if(!massaDeDadosInvalida.isEmpty()){

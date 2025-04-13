@@ -23,7 +23,7 @@ CREATE TABLE Paciente (
     complemento VARCHAR(100)
 );
 CREATE TABLE Especialidade (
-    nome VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL UNIQUE,
     cbo VARCHAR(50) NOt NULL PRIMARY KEY
     );
 CREATE TABLE Atendimento (
@@ -44,8 +44,8 @@ CREATE TABLE Medico (
     cidade VARCHAR(100) NOT NULL,
     complemento VARCHAR(100),
     nascimento DATE NOT NULL,
-    FOREIGN KEY (especialidade) REFERENCES Especialidade (cbo)
-    CONSTRAINT chk_crm_not_empty CHECK (crm <> '') -- TESTAR Garante que o CRM não seja uma string vazia
+    FOREIGN KEY (especialidade) REFERENCES Especialidade (cbo),
+    CONSTRAINT chk_crm_not_empty CHECK (crm <> '')
 
     );
 CREATE TABLE Consulta (
@@ -59,5 +59,5 @@ CREATE TABLE Consulta (
     );
 SELECT * FROM atendente;
 INSERT INTO Codigo VALUES (1);
-INSERT INTO Atendente VALUES (1,'adm','root','1234');
-SELECT * FROM atendente WHERE username = 'root' AND senha = '1234';
+INSERT INTO Atendente VALUES (1,'adm','root','Espanhol789)');
+SELECT * FROM atendente WHERE username = 'root' AND senha = 'Espanhol789)';

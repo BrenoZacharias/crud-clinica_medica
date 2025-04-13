@@ -1,6 +1,7 @@
 package Controller;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import DAO.EspecialidadeDAO;
@@ -12,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 public class TelaEspecialidadeController {
 	public StringProperty nome = new SimpleStringProperty("");
@@ -25,10 +27,18 @@ public class TelaEspecialidadeController {
 		pesquisar();
 	}
 	public void adicionar() {
-		especialidades.clear();
-		Especialidade especialidade = toEntity(); 
-		especialidadeDAO.adicionar(especialidade);
-		especialidades.addAll(especialidadeDAO.pesquisarTodos());
+		try{
+			especialidades.clear();
+			Especialidade especialidade = toEntity();
+			especialidadeDAO.adicionar(especialidade);
+			especialidades.addAll(especialidadeDAO.pesquisarTodos());
+			Controller.Alerts.showAlert( "Especialidade Adicionada com sucesso", null, "Especialidade Adicionada com sucesso", Alert.AlertType.INFORMATION);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			Controller.Alerts.showAlert("Erro ao adicionar especialidade",null,"código da especialidade já cadastrado no sistema!", Alert.AlertType.ERROR);
+			pesquisar();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 	public void atualizar() {
 		especialidades.clear();

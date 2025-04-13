@@ -16,19 +16,15 @@ public class EspecialidadeDAOImpl implements EspecialidadeDAO{
 	GenericDAO gDao = new GenericDAO();
 	
 	@Override
-	public void adicionar(Especialidade especialidade) {
-		try {
-			Connection con = gDao.getConnection();
-			String sql = "INSERT INTO especialidade(nome, cbo)" + "VALUES(?,?)";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, especialidade.getNome());
-			st.setString(2, especialidade.getCbo());
-			st.executeUpdate();
-			st.close();
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
+	public void adicionar(Especialidade especialidade) throws SQLException{
+		Connection con = gDao.getConnection();
+		String sql = "INSERT INTO especialidade(nome, cbo)" + "VALUES(?,?)";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, especialidade.getNome());
+		st.setString(2, especialidade.getCbo());
+		st.executeUpdate();
+		st.close();
+		con.close();
 	}
 	@Override
 	public void atualizar(Especialidade especialidade) {
